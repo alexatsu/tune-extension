@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "Griffin";
+    src: url(/assets/fonts/Qwitcher_Grypen/QwitcherGrypen-Regular.ttf) format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Griffin";
+    src: url(/assets/fonts/Qwitcher_Grypen/QwitcherGrypen-Bold.ttf) format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Quicksand";
+    src: url(/assets/fonts/Quicksand/Quicksand-Regular.ttf) format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Quicksand";
+    src: url(/assets/fonts/Quicksand/Quicksand-Medium.ttf) format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Quicksand";
+    src: url(/assets/fonts/Quicksand/Quicksand-SemiBold.ttf) format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Quicksand";
+    src: url(/assets/fonts/Quicksand/Quicksand-Bold.ttf) format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-griffin: "Griffin", serif;
+    --font-quicksand: "Quicksand", sans-serif;
+}
+
+@layer base {
+    p, span {
+        font-family: var(--font-quicksand);
+    }
+}
