@@ -54,7 +54,10 @@
 }
 
 @layer base {
-    p, span {
+
+    p,
+    span {
         font-family: var(--font-quicksand);
+        font-size: 1rem;
     }
 }
