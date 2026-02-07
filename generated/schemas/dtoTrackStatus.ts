@@ -12,4 +12,5 @@ export type DtoTrackStatus = typeof DtoTrackStatus[keyof typeof DtoTrackStatus];
 export const DtoTrackStatus = {
   TrackMissing: 'missing',
   TrackExist: 'exist',
+  TrackQueued: 'queued',
 } as const;
