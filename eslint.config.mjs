@@ -18,7 +18,7 @@ export default defineConfig(
   {
     ignores: [".output", ".wxt"],
     rules: {
-      "set-state-in-effect": [0],
+      "react-hooks/set-state-in-effect": [0],
     },
   },
 )

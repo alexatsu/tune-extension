@@ -68,7 +68,7 @@ export function YoutubeProvider({ currentUrl }: { currentUrl: string }) {
         <div className="flex items-center gap-2 flex-wrap">
           <span>track</span>
           {error && <HeartIcon fill={TrackStatusColors.error} />}
-
+          {!data && <div>-</div>}
           {data && data.status === DtoTrackStatus.TrackQueued && (
             <div
               className={`flex content-center justify-center gap-2 ${data.status === DtoTrackStatus.TrackQueued ? "animate-fadeIn" : ""}`}
