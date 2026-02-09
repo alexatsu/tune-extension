@@ -8,10 +8,10 @@
 import type { DtoTrackStatus } from './dtoTrackStatus';
 
 export interface DtoExistTrackYoutubeResponseDto {
-  InQueue: boolean;
   audio?: string;
   inDb: boolean;
   inFs: boolean;
+  inQueue: boolean;
   sharedId?: string;
   status: DtoTrackStatus;
   thumb?: string;

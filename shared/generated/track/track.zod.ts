@@ -32,10 +32,10 @@ export const GetApiTrackExistYoutubeQueryParams = zod.object({
 })
 
 export const GetApiTrackExistYoutubeResponse = zod.object({
-  "InQueue": zod.boolean(),
   "audio": zod.string().optional(),
   "inDb": zod.boolean(),
   "inFs": zod.boolean(),
+  "inQueue": zod.boolean(),
   "sharedId": zod.string().optional(),
   "status": zod.enum(['missing', 'exist', 'queued']),
   "thumb": zod.string().optional(),

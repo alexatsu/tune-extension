@@ -11,8 +11,8 @@ export default defineConfig({
     output: {
       mode: "tags-split",
       client: "react-query",
-      target: "generated",
-      schemas: "generated/schemas",
+      target: "shared/generated",
+      schemas: "shared/generated/schemas",
       mock: false,
       baseUrl,
       headers: false,
@@ -34,7 +34,7 @@ export default defineConfig({
     output: {
       mode: "tags-split",
       client: "zod",
-      target: "generated",
+      target: "shared/generated",
       fileExtension: ".zod.ts",
     },
   },
