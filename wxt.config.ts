@@ -13,4 +13,5 @@ export default defineConfig({
   manifest: {
     permissions: ["tabs", "activeTab"],
   },
+  debug: true,
 })

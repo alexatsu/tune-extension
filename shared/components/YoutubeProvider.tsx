@@ -13,16 +13,13 @@ import {
 } from "@/shared/generated/track/track"
 import { queryClient } from "@/shared/lib/queryClient"
 
-export function YoutubeProvider({ currentUrl }: { currentUrl: string }) {
-  const { data, isLoading, error } = useGetApiTrackExistYoutube(
-    { url: currentUrl },
-    { query: { enabled: !!currentUrl } },
-  )
+export function YoutubeProvider({ url }: { url: string }) {
+  const { data, isLoading, error } = useGetApiTrackExistYoutube({ url }, { query: { enabled: !!url } })
 
   const { mutate: deleteTrack } = useDeleteApiTrackSharedId({
     mutation: {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey() })
+        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey({ url }) })
       },
     },
   })
@@ -30,19 +27,17 @@ export function YoutubeProvider({ currentUrl }: { currentUrl: string }) {
   const { mutate: downloadTrack } = usePostApiTrackDownload({
     mutation: {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey() })
+        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey({ url }) })
       },
     },
   })
 
   useEffect(() => {
-    if (!currentUrl) return
-
     const eventSource = new EventSource(getGetApiSseQueryKey()[0])
 
     const sseDownloadFinished = async () => {
       try {
-        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey({ url: currentUrl }) })
+        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey({ url }) })
       } catch (e) {
         console.error("SSE parse error:", e)
       }
@@ -55,7 +50,9 @@ export function YoutubeProvider({ currentUrl }: { currentUrl: string }) {
       eventSource.removeEventListener(SseSseDownloadEvent.EventDownloadFinished, sseDownloadFinished)
       eventSource.close()
     }
-  }, [currentUrl])
+  }, [url])
+
+  console.log(data, url, "here")
 
   return (
     <>
@@ -99,7 +96,10 @@ export function YoutubeProvider({ currentUrl }: { currentUrl: string }) {
               <HeartIcon fill={TrackStatusColors.missing} />
               <button
                 className="flex items-center justify-center cursor-pointer hover:bg-slate-800/80 rounded transition-colors"
-                onClick={() => downloadTrack({ data: { url: currentUrl } })}
+                onClick={() => {
+                  console.log(data, url, "in download")
+                  downloadTrack({ data: { url } })
+                }}
               >
                 <AddIcon className="size-4" />
               </button>

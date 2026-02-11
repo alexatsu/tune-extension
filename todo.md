@@ -1,5 +1,2 @@
-- create storage for errors
-- can navigate to errors page to check them in the list
-- add button clear errors 
-- add icons for extension
-- check issues with vpn
+- add check to server connection
+- fill in readme

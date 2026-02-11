@@ -10,7 +10,7 @@ function App() {
       <h1 className="font-griffin text-4xl text-center mb-2">Tune</h1>
 
       {!currentProvider && <div className="p-4 text-center text-gray-400 text-lg">Provider was not detected</div>}
-      {currentProvider === Providers.youtube && <YoutubeProvider currentUrl={currentUrl} />}
+      {currentProvider === Providers.youtube && <YoutubeProvider url={currentUrl} />}
       <IsOnline />
     </main>
   )
