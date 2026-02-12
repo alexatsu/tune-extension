@@ -40,19 +40,19 @@ export function IsOnline() {
   return (
     <>
       {!isOnline && (
-        <div className="fixed bottom-0 left-0 right-0 rounded-t-md bg-[#FF5151] text-black text-center z-50 animate-fadeIn text-sm">
+        <div className="fixed bottom-0 left-0 right-0  bg-[#FF5151] text-black text-center z-50 animate-fadeIn text-sm">
           You are offline
         </div>
       )}
 
       {wasPrevOffline && isOnline && !showTempBackOnline && (
-        <div className="fixed bottom-0 left-0 right-0 rounded-t-md bg-[#60ff51] text-black text-center z-50 text-sm">
+        <div className="fixed bottom-0 left-0 right-0  bg-[#60ff51] text-black text-center z-50 text-sm">
           Back online
         </div>
       )}
 
       {showTempBackOnline && (
-        <div className="fixed bottom-0 left-0 right-0 rounded-t-md bg-[#60ff51] text-black text-center z-50 animate-fadeOut text-sm">
+        <div className="fixed bottom-0 left-0 right-0  bg-[#60ff51] text-black text-center z-50 animate-fadeOut text-sm">
           Back online
         </div>
       )}

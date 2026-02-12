@@ -1,6 +1,7 @@
 import { defineConfig } from "orval"
+import "dotenv/config"
 
-const baseUrl = "http://192.168.1.128:8080"
+const baseUrl = process.env.VITE_BACKEND_SERVER
 const target = baseUrl + "/swagger/doc.json"
 
 export default defineConfig({

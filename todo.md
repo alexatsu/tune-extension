@@ -1,2 +1,0 @@
-- add check to server connection
-- fill in readme
