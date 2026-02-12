@@ -2,7 +2,10 @@ name: Build and Release WXT Extension
 
 on:
   push:
-    branches: ["test-ci"]
+    branches: ["main"]
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -11,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -22,6 +27,10 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
+
+      - name: Get package.json version
+        id: version
+        run: echo "tag=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Create .env file
         run: |
@@ -36,18 +45,24 @@ jobs:
       - name: Zip Chrome release asset
         run: |
           cd .output/chrome-mv3  
-          zip -r ../extension-${{ github.ref_name }}-chrome.zip .
+          zip -r ../extension-${{ steps.version.outputs.tag }}-chrome.zip .
 
       - name: Zip Firefox release asset
         run: |
-          wxt zip -b firefox
-          cd .output/firefox-mv3
-          zip -r ../extension-${{ github.ref_name }}-firefox.zip .
+          pnpm build:firefox
+          cd .output/firefox-mv2
+          zip -r ../extension-${{ steps.version.outputs.tag }}-firefox.zip .
+
+      - name: Create tag
+        run: |
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin ${{ steps.version.outputs.tag }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
           files: |
-            .output/extension-${{ github.ref_name }}-chrome.zip
-            .output/extension-${{ github.ref_name }}-firefox.zip
+            .output/extension-${{ steps.version.outputs.tag }}-chrome.zip
+            .output/extension-${{ steps.version.outputs.tag }}-firefox.zip
           generate_release_notes: true
