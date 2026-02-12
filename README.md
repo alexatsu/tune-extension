@@ -1,6 +1,6 @@
 ## Tune browser extension
 
-- connects to tune-backend (Behind a NAT/Private Network)
+- connects to tune-backend (Behind a NAT/Private Network by default, can be changed in env)
 - checks if track exist by provider
 - download new tracks
 - mark tracks for deletion
