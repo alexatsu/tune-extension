@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import {
   useQuery
@@ -21,10 +21,13 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  GetApiHealth200
+  HealthHealthDtoResponse
 } from '.././schemas';
 
+import { customFetcher } from '../../customFetcher';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -37,25 +40,19 @@ export const getGetApiHealthUrl = () => {
 
   
 
-  return `http://192.168.1.128:8080/api/health`
+  return `/api/health`
 }
 
-export const getApiHealth = async ( options?: RequestInit): Promise<GetApiHealth200> => {
+export const getApiHealth = async ( options?: RequestInit): Promise<HealthHealthDtoResponse> => {
   
-  const res = await fetch(getGetApiHealthUrl(),
+  return customFetcher<HealthHealthDtoResponse>(getGetApiHealthUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: GetApiHealth200 = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -63,21 +60,21 @@ export const getApiHealth = async ( options?: RequestInit): Promise<GetApiHealth
 
 export const getGetApiHealthQueryKey = () => {
     return [
-    `http://192.168.1.128:8080/api/health`
+    `/api/health`
     ] as const;
     }
 
     
-export const getGetApiHealthQueryOptions = <TData = Awaited<ReturnType<typeof getApiHealth>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHealth>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiHealthQueryOptions = <TData = Awaited<ReturnType<typeof getApiHealth>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHealth>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiHealthQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiHealth>>> = ({ signal }) => getApiHealth({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiHealth>>> = ({ signal }) => getApiHealth({ signal, ...requestOptions });
 
       
 
@@ -97,7 +94,7 @@ export function useGetApiHealth<TData = Awaited<ReturnType<typeof getApiHealth>>
           TError,
           Awaited<ReturnType<typeof getApiHealth>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiHealth<TData = Awaited<ReturnType<typeof getApiHealth>>, TError = unknown>(
@@ -107,11 +104,11 @@ export function useGetApiHealth<TData = Awaited<ReturnType<typeof getApiHealth>>
           TError,
           Awaited<ReturnType<typeof getApiHealth>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiHealth<TData = Awaited<ReturnType<typeof getApiHealth>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHealth>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHealth>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -119,7 +116,7 @@ export function useGetApiHealth<TData = Awaited<ReturnType<typeof getApiHealth>>
  */
 
 export function useGetApiHealth<TData = Awaited<ReturnType<typeof getApiHealth>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHealth>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHealth>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 

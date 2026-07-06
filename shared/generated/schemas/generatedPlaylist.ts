@@ -6,10 +6,12 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface DtoDownloadYoutubeTrackResponse {
-  audio?: string;
-  message?: string;
+export interface GeneratedPlaylist {
+  cover?: string;
+  createdAt?: string;
+  description?: string;
+  isDefault?: boolean;
+  name?: string;
   sharedId?: string;
-  status: string;
-  thumb?: string;
+  updatedAt?: string;
 }

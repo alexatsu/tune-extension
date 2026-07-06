@@ -3,12 +3,12 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 
 export interface DtoSaveYoutubeTrackMetadataResponse {
-  metadata?: unknown;
-  missing?: string[];
-  source?: string;
-  status?: string;
+  metadata: unknown;
+  missing: string[];
+  source: string;
+  status: string;
 }

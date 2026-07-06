@@ -1,7 +1,6 @@
 export enum Providers {
   youtube = "youtube",
   soundcloud = "soundcloud",
-  spotify = "spotify",
 }
 
 export type Provider = keyof typeof Providers
@@ -9,7 +8,6 @@ export type Provider = keyof typeof Providers
 const providerRegexes: Record<Provider, RegExp> = {
   youtube: /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch|v|embed)|youtu\.be\/)/i,
   soundcloud: /^(?:https?:\/\/)?(www\.|m\.)?soundcloud\.com\//i,
-  spotify: /^(?:https?:\/\/)?open\.spotify\.com\/(track|user|artist|album)\//i,
 } as const
 
 export const detectProvider = (url: string) => {

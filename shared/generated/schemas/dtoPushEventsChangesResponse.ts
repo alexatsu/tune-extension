@@ -6,9 +6,7 @@
  * OpenAPI spec version: 1.0
  */
 
-export type GetApiYtDlpSearchParams = {
-/**
- * url|song name
- */
-url: string;
-};
+export interface DtoPushEventsChangesResponse {
+  message: string;
+  success: boolean;
+}

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import * as zod from 'zod';
 
@@ -19,9 +19,8 @@ export const PostApiTrackDownloadResponse = zod.object({
   "audio": zod.string().optional(),
   "message": zod.string().optional(),
   "sharedId": zod.string().optional(),
-  "status": zod.string().optional(),
-  "thumb": zod.string().optional(),
-  "trackId": zod.string().optional()
+  "status": zod.string(),
+  "thumb": zod.string().optional()
 })
 
 /**
@@ -50,21 +49,10 @@ export const PostApiTrackMetadataQueryParams = zod.object({
 })
 
 export const PostApiTrackMetadataResponse = zod.object({
-  "metadata": zod.unknown().optional(),
-  "missing": zod.array(zod.string()).optional(),
-  "source": zod.string().optional(),
-  "status": zod.string().optional()
-})
-
-/**
- * @summary Mark track for deletion
- */
-export const DeleteApiTrackSharedIdParams = zod.object({
-  "sharedId": zod.string().describe('Track Shared ID (UUID)')
-})
-
-export const DeleteApiTrackSharedIdResponse = zod.object({
-  "message": zod.string().optional()
+  "metadata": zod.unknown(),
+  "missing": zod.array(zod.string()),
+  "source": zod.string(),
+  "status": zod.string()
 })
 
 /**

@@ -6,9 +6,8 @@
  * OpenAPI spec version: 1.0
  */
 
-export type GetApiYtDlpSearchParams = {
-/**
- * url|song name
- */
-url: string;
-};
+export interface GeneratedPlaylistOnTrack {
+  addedAt?: string;
+  playlistSharedId?: string;
+  trackSharedId?: string;
+}

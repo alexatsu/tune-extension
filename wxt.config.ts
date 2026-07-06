@@ -11,7 +11,7 @@ export default defineConfig({
       plugins: [tailwindcss()],
     }) as WxtViteConfig,
   manifest: {
-    permissions: ["tabs", "activeTab"],
+    permissions: ["tabs", "activeTab", "storage"],
   },
   debug: true,
 })

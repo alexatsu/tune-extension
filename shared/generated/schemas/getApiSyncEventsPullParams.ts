@@ -6,9 +6,13 @@
  * OpenAPI spec version: 1.0
  */
 
-export type GetApiYtDlpSearchParams = {
+export type GetApiSyncEventsPullParams = {
 /**
- * url|song name
+ * Device ID
  */
-url: string;
+deviceSharedId: string;
+/**
+ * Sync timestamp
+ */
+syncAt: string;
 };

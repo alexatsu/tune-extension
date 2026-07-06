@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import * as zod from 'zod';
 
@@ -12,5 +12,7 @@ import * as zod from 'zod';
  * Basic service health status
  * @summary Health check
  */
-export const GetApiHealthResponse = zod.record(zod.string(), zod.string())
+export const GetApiHealthResponse = zod.object({
+  "status": zod.string()
+})
 

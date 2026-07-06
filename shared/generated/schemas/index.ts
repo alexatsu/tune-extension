@@ -3,26 +3,48 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 
+export * from './dtoCreateLocalDeviceRequest';
+export * from './dtoCreateLocalDeviceResponse';
 export * from './dtoDownloadYoutubeTrackRequest';
 export * from './dtoDownloadYoutubeTrackResponse';
 export * from './dtoErrorResponse';
+export * from './dtoEventsEnumResponse';
 export * from './dtoExistTrackYoutubeResponseDto';
+export * from './dtoGetDevicesResponse';
 export * from './dtoMarkAlbumDeletedResponse';
 export * from './dtoMarkTrackDeletedResponse';
+export * from './dtoOverridedGetAllDevicesRow';
+export * from './dtoProvidersEnumResponse';
+export * from './dtoPullEventsChangesResponse';
+export * from './dtoPullFullSyncResponse';
+export * from './dtoPushEventsChangesRequest';
+export * from './dtoPushEventsChangesResponse';
 export * from './dtoSaveYoutubeTrackMetadataResponse';
 export * from './dtoSearchResponseDto';
 export * from './dtoSearchYtDlpResult';
 export * from './dtoTrackStatus';
+export * from './generatedPlaylist';
+export * from './generatedPlaylistEvent';
+export * from './generatedPlaylistOnTrack';
+export * from './generatedPlaylistOnTrackEvent';
+export * from './generatedTrack';
+export * from './generatedTrackEvent';
 export * from './getApiHealth200';
 export * from './getApiSseDefault';
 export * from './getApiSseDownload';
 export * from './getApiSseParams';
+export * from './getApiSyncEventsPullParams';
 export * from './getApiTrackExistYoutubeParams';
 export * from './getApiYtDlpSearchParams';
 export * from './getHealth200';
+export * from './healthHealthDtoResponse';
+export * from './playlistEventType';
+export * from './playlistontrackEventType';
 export * from './postApiTrackMetadataParams';
+export * from './providersProviderType';
 export * from './sseSseDefaultEvent';
 export * from './sseSseDownloadEvent';
+export * from './trackEventType';

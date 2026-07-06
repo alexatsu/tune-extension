@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import {
   useQuery
@@ -24,7 +24,10 @@ import type {
   GetApiSseParams
 } from '.././schemas';
 
+import { customFetcher } from '../../customFetcher';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -44,25 +47,19 @@ export const getGetApiSseUrl = (params?: GetApiSseParams,) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `http://192.168.1.128:8080/api/sse?${stringifiedParams}` : `http://192.168.1.128:8080/api/sse`
+  return stringifiedParams.length > 0 ? `/api/sse?${stringifiedParams}` : `/api/sse`
 }
 
 export const getApiSse = async (params?: GetApiSseParams, options?: RequestInit): Promise<void> => {
   
-  const res = await fetch(getGetApiSseUrl(params),
+  return customFetcher<void>(getGetApiSseUrl(params),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: void = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -70,21 +67,21 @@ export const getApiSse = async (params?: GetApiSseParams, options?: RequestInit)
 
 export const getGetApiSseQueryKey = (params?: GetApiSseParams,) => {
     return [
-    `http://192.168.1.128:8080/api/sse`, ...(params ? [params] : [])
+    `/api/sse`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetApiSseQueryOptions = <TData = Awaited<ReturnType<typeof getApiSse>>, TError = unknown>(params?: GetApiSseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSse>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiSseQueryOptions = <TData = Awaited<ReturnType<typeof getApiSse>>, TError = unknown>(params?: GetApiSseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSse>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiSseQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiSse>>> = ({ signal }) => getApiSse(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiSse>>> = ({ signal }) => getApiSse(params, { signal, ...requestOptions });
 
       
 
@@ -104,7 +101,7 @@ export function useGetApiSse<TData = Awaited<ReturnType<typeof getApiSse>>, TErr
           TError,
           Awaited<ReturnType<typeof getApiSse>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiSse<TData = Awaited<ReturnType<typeof getApiSse>>, TError = unknown>(
@@ -114,11 +111,11 @@ export function useGetApiSse<TData = Awaited<ReturnType<typeof getApiSse>>, TErr
           TError,
           Awaited<ReturnType<typeof getApiSse>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiSse<TData = Awaited<ReturnType<typeof getApiSse>>, TError = unknown>(
- params?: GetApiSseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSse>>, TError, TData>>, fetch?: RequestInit}
+ params?: GetApiSseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSse>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -126,7 +123,7 @@ export function useGetApiSse<TData = Awaited<ReturnType<typeof getApiSse>>, TErr
  */
 
 export function useGetApiSse<TData = Awaited<ReturnType<typeof getApiSse>>, TError = unknown>(
- params?: GetApiSseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSse>>, TError, TData>>, fetch?: RequestInit}
+ params?: GetApiSseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSse>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 

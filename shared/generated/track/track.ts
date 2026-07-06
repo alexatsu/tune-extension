@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import {
   useMutation,
@@ -29,13 +29,15 @@ import type {
   DtoDownloadYoutubeTrackResponse,
   DtoErrorResponse,
   DtoExistTrackYoutubeResponseDto,
-  DtoMarkTrackDeletedResponse,
   DtoSaveYoutubeTrackMetadataResponse,
   GetApiTrackExistYoutubeParams,
   PostApiTrackMetadataParams
 } from '.././schemas';
 
+import { customFetcher } from '../../customFetcher';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -47,12 +49,12 @@ export const getPostApiTrackDownloadUrl = () => {
 
   
 
-  return `http://192.168.1.128:8080/api/track/download`
+  return `/api/track/download`
 }
 
 export const postApiTrackDownload = async (dtoDownloadYoutubeTrackRequest: DtoDownloadYoutubeTrackRequest, options?: RequestInit): Promise<DtoDownloadYoutubeTrackResponse> => {
   
-  const res = await fetch(getPostApiTrackDownloadUrl(),
+  return customFetcher<DtoDownloadYoutubeTrackResponse>(getPostApiTrackDownloadUrl(),
   {      
     ...options,
     method: 'POST',
@@ -60,27 +62,21 @@ export const postApiTrackDownload = async (dtoDownloadYoutubeTrackRequest: DtoDo
     body: JSON.stringify(
       dtoDownloadYoutubeTrackRequest,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: DtoDownloadYoutubeTrackResponse = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
 
 export const getPostApiTrackDownloadMutationOptions = <TError = DtoErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackDownload>>, TError,{data: DtoDownloadYoutubeTrackRequest}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackDownload>>, TError,{data: DtoDownloadYoutubeTrackRequest}, TContext>, request?: SecondParameter<typeof customFetcher>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiTrackDownload>>, TError,{data: DtoDownloadYoutubeTrackRequest}, TContext> => {
 
 const mutationKey = ['postApiTrackDownload'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -88,7 +84,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrackDownload>>, {data: DtoDownloadYoutubeTrackRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiTrackDownload(data,fetchOptions)
+          return  postApiTrackDownload(data,requestOptions)
         }
 
 
@@ -106,7 +102,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
  * @summary Download/Queue YouTube track
  */
 export const usePostApiTrackDownload = <TError = DtoErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackDownload>>, TError,{data: DtoDownloadYoutubeTrackRequest}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackDownload>>, TError,{data: DtoDownloadYoutubeTrackRequest}, TContext>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiTrackDownload>>,
         TError,
@@ -130,25 +126,19 @@ export const getGetApiTrackExistYoutubeUrl = (params: GetApiTrackExistYoutubePar
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `http://192.168.1.128:8080/api/track/exist/youtube?${stringifiedParams}` : `http://192.168.1.128:8080/api/track/exist/youtube`
+  return stringifiedParams.length > 0 ? `/api/track/exist/youtube?${stringifiedParams}` : `/api/track/exist/youtube`
 }
 
 export const getApiTrackExistYoutube = async (params: GetApiTrackExistYoutubeParams, options?: RequestInit): Promise<DtoExistTrackYoutubeResponseDto> => {
   
-  const res = await fetch(getGetApiTrackExistYoutubeUrl(params),
+  return customFetcher<DtoExistTrackYoutubeResponseDto>(getGetApiTrackExistYoutubeUrl(params),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: DtoExistTrackYoutubeResponseDto = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -156,21 +146,21 @@ export const getApiTrackExistYoutube = async (params: GetApiTrackExistYoutubePar
 
 export const getGetApiTrackExistYoutubeQueryKey = (params?: GetApiTrackExistYoutubeParams,) => {
     return [
-    `http://192.168.1.128:8080/api/track/exist/youtube`, ...(params ? [params] : [])
+    `/api/track/exist/youtube`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetApiTrackExistYoutubeQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError = DtoErrorResponse>(params: GetApiTrackExistYoutubeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiTrackExistYoutubeQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError = DtoErrorResponse>(params: GetApiTrackExistYoutubeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiTrackExistYoutubeQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrackExistYoutube>>> = ({ signal }) => getApiTrackExistYoutube(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrackExistYoutube>>> = ({ signal }) => getApiTrackExistYoutube(params, { signal, ...requestOptions });
 
       
 
@@ -190,7 +180,7 @@ export function useGetApiTrackExistYoutube<TData = Awaited<ReturnType<typeof get
           TError,
           Awaited<ReturnType<typeof getApiTrackExistYoutube>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiTrackExistYoutube<TData = Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError = DtoErrorResponse>(
@@ -200,11 +190,11 @@ export function useGetApiTrackExistYoutube<TData = Awaited<ReturnType<typeof get
           TError,
           Awaited<ReturnType<typeof getApiTrackExistYoutube>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiTrackExistYoutube<TData = Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError = DtoErrorResponse>(
- params: GetApiTrackExistYoutubeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError, TData>>, fetch?: RequestInit}
+ params: GetApiTrackExistYoutubeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -212,7 +202,7 @@ export function useGetApiTrackExistYoutube<TData = Awaited<ReturnType<typeof get
  */
 
 export function useGetApiTrackExistYoutube<TData = Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError = DtoErrorResponse>(
- params: GetApiTrackExistYoutubeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError, TData>>, fetch?: RequestInit}
+ params: GetApiTrackExistYoutubeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackExistYoutube>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -241,39 +231,33 @@ export const getPostApiTrackMetadataUrl = (params: PostApiTrackMetadataParams,) 
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `http://192.168.1.128:8080/api/track/metadata?${stringifiedParams}` : `http://192.168.1.128:8080/api/track/metadata`
+  return stringifiedParams.length > 0 ? `/api/track/metadata?${stringifiedParams}` : `/api/track/metadata`
 }
 
 export const postApiTrackMetadata = async (params: PostApiTrackMetadataParams, options?: RequestInit): Promise<DtoSaveYoutubeTrackMetadataResponse> => {
   
-  const res = await fetch(getPostApiTrackMetadataUrl(params),
+  return customFetcher<DtoSaveYoutubeTrackMetadataResponse>(getPostApiTrackMetadataUrl(params),
   {      
     ...options,
     method: 'POST'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: DtoSaveYoutubeTrackMetadataResponse = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
 
 export const getPostApiTrackMetadataMutationOptions = <TError = DtoErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackMetadata>>, TError,{params: PostApiTrackMetadataParams}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackMetadata>>, TError,{params: PostApiTrackMetadataParams}, TContext>, request?: SecondParameter<typeof customFetcher>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiTrackMetadata>>, TError,{params: PostApiTrackMetadataParams}, TContext> => {
 
 const mutationKey = ['postApiTrackMetadata'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -281,7 +265,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrackMetadata>>, {params: PostApiTrackMetadataParams}> = (props) => {
           const {params} = props ?? {};
 
-          return  postApiTrackMetadata(params,fetchOptions)
+          return  postApiTrackMetadata(params,requestOptions)
         }
 
 
@@ -299,7 +283,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
  * @summary Save metadata for YouTube track
  */
 export const usePostApiTrackMetadata = <TError = DtoErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackMetadata>>, TError,{params: PostApiTrackMetadataParams}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrackMetadata>>, TError,{params: PostApiTrackMetadataParams}, TContext>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiTrackMetadata>>,
         TError,
@@ -309,81 +293,6 @@ export const usePostApiTrackMetadata = <TError = DtoErrorResponse,
       return useMutation(getPostApiTrackMetadataMutationOptions(options), queryClient);
     }
     /**
- * @summary Mark track for deletion
- */
-export const getDeleteApiTrackSharedIdUrl = (sharedId: string,) => {
-
-
-  
-
-  return `http://192.168.1.128:8080/api/track/${sharedId}`
-}
-
-export const deleteApiTrackSharedId = async (sharedId: string, options?: RequestInit): Promise<DtoMarkTrackDeletedResponse> => {
-  
-  const res = await fetch(getDeleteApiTrackSharedIdUrl(sharedId),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: DtoMarkTrackDeletedResponse = body ? JSON.parse(body) : {}
-  return data
-}
-
-
-
-
-export const getDeleteApiTrackSharedIdMutationOptions = <TError = DtoErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiTrackSharedId>>, TError,{sharedId: string}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteApiTrackSharedId>>, TError,{sharedId: string}, TContext> => {
-
-const mutationKey = ['deleteApiTrackSharedId'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiTrackSharedId>>, {sharedId: string}> = (props) => {
-          const {sharedId} = props ?? {};
-
-          return  deleteApiTrackSharedId(sharedId,fetchOptions)
-        }
-
-
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteApiTrackSharedIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiTrackSharedId>>>
-    
-    export type DeleteApiTrackSharedIdMutationError = DtoErrorResponse
-
-    /**
- * @summary Mark track for deletion
- */
-export const useDeleteApiTrackSharedId = <TError = DtoErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiTrackSharedId>>, TError,{sharedId: string}, TContext>, fetch?: RequestInit}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteApiTrackSharedId>>,
-        TError,
-        {sharedId: string},
-        TContext
-      > => {
-      return useMutation(getDeleteApiTrackSharedIdMutationOptions(options), queryClient);
-    }
-    /**
  * @summary Export track as ZIP
  */
 export const getGetApiTrackSharedIdExportUrl = (sharedId: string,) => {
@@ -391,25 +300,19 @@ export const getGetApiTrackSharedIdExportUrl = (sharedId: string,) => {
 
   
 
-  return `http://192.168.1.128:8080/api/track/${sharedId}/export`
+  return `/api/track/${sharedId}/export`
 }
 
 export const getApiTrackSharedIdExport = async (sharedId: string, options?: RequestInit): Promise<string> => {
   
-  const res = await fetch(getGetApiTrackSharedIdExportUrl(sharedId),
+  return customFetcher<string>(getGetApiTrackSharedIdExportUrl(sharedId),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: string = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -417,21 +320,21 @@ export const getApiTrackSharedIdExport = async (sharedId: string, options?: Requ
 
 export const getGetApiTrackSharedIdExportQueryKey = (sharedId: string,) => {
     return [
-    `http://192.168.1.128:8080/api/track/${sharedId}/export`
+    `/api/track/${sharedId}/export`
     ] as const;
     }
 
     
-export const getGetApiTrackSharedIdExportQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError = DtoErrorResponse>(sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiTrackSharedIdExportQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError = DtoErrorResponse>(sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiTrackSharedIdExportQueryKey(sharedId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>> = ({ signal }) => getApiTrackSharedIdExport(sharedId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>> = ({ signal }) => getApiTrackSharedIdExport(sharedId, { signal, ...requestOptions });
 
       
 
@@ -451,7 +354,7 @@ export function useGetApiTrackSharedIdExport<TData = Awaited<ReturnType<typeof g
           TError,
           Awaited<ReturnType<typeof getApiTrackSharedIdExport>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiTrackSharedIdExport<TData = Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError = DtoErrorResponse>(
@@ -461,11 +364,11 @@ export function useGetApiTrackSharedIdExport<TData = Awaited<ReturnType<typeof g
           TError,
           Awaited<ReturnType<typeof getApiTrackSharedIdExport>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiTrackSharedIdExport<TData = Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError = DtoErrorResponse>(
- sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError, TData>>, fetch?: RequestInit}
+ sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -473,7 +376,7 @@ export function useGetApiTrackSharedIdExport<TData = Awaited<ReturnType<typeof g
  */
 
 export function useGetApiTrackSharedIdExport<TData = Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError = DtoErrorResponse>(
- sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError, TData>>, fetch?: RequestInit}
+ sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdExport>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -495,25 +398,19 @@ export const getGetApiTrackSharedIdStreamUrl = (sharedId: string,) => {
 
   
 
-  return `http://192.168.1.128:8080/api/track/${sharedId}/stream`
+  return `/api/track/${sharedId}/stream`
 }
 
 export const getApiTrackSharedIdStream = async (sharedId: string, options?: RequestInit): Promise<string> => {
   
-  const res = await fetch(getGetApiTrackSharedIdStreamUrl(sharedId),
+  return customFetcher<string>(getGetApiTrackSharedIdStreamUrl(sharedId),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: string = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -521,21 +418,21 @@ export const getApiTrackSharedIdStream = async (sharedId: string, options?: Requ
 
 export const getGetApiTrackSharedIdStreamQueryKey = (sharedId: string,) => {
     return [
-    `http://192.168.1.128:8080/api/track/${sharedId}/stream`
+    `/api/track/${sharedId}/stream`
     ] as const;
     }
 
     
-export const getGetApiTrackSharedIdStreamQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError = DtoErrorResponse>(sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiTrackSharedIdStreamQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError = DtoErrorResponse>(sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiTrackSharedIdStreamQueryKey(sharedId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>> = ({ signal }) => getApiTrackSharedIdStream(sharedId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>> = ({ signal }) => getApiTrackSharedIdStream(sharedId, { signal, ...requestOptions });
 
       
 
@@ -555,7 +452,7 @@ export function useGetApiTrackSharedIdStream<TData = Awaited<ReturnType<typeof g
           TError,
           Awaited<ReturnType<typeof getApiTrackSharedIdStream>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiTrackSharedIdStream<TData = Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError = DtoErrorResponse>(
@@ -565,11 +462,11 @@ export function useGetApiTrackSharedIdStream<TData = Awaited<ReturnType<typeof g
           TError,
           Awaited<ReturnType<typeof getApiTrackSharedIdStream>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiTrackSharedIdStream<TData = Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError = DtoErrorResponse>(
- sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError, TData>>, fetch?: RequestInit}
+ sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -577,7 +474,7 @@ export function useGetApiTrackSharedIdStream<TData = Awaited<ReturnType<typeof g
  */
 
 export function useGetApiTrackSharedIdStream<TData = Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError = DtoErrorResponse>(
- sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError, TData>>, fetch?: RequestInit}
+ sharedId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrackSharedIdStream>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 

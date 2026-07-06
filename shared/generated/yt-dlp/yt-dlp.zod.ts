@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import * as zod from 'zod';
 
@@ -16,13 +16,13 @@ export const GetApiYtDlpSearchQueryParams = zod.object({
 })
 
 export const GetApiYtDlpSearchResponse = zod.object({
-  "query": zod.string().optional(),
+  "query": zod.string(),
   "results": zod.array(zod.object({
-  "duration": zod.number().optional(),
-  "id": zod.string().optional(),
-  "thumbnail": zod.string().optional(),
-  "title": zod.string().optional(),
-  "url": zod.string().optional()
-})).optional()
+  "duration": zod.number(),
+  "id": zod.string(),
+  "thumbnail": zod.string(),
+  "title": zod.string(),
+  "url": zod.string()
+}))
 })
 

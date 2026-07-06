@@ -15,7 +15,7 @@ export default defineConfig({
       target: "shared/generated",
       schemas: "shared/generated/schemas",
       mock: false,
-      baseUrl,
+      baseUrl: "",
       headers: false,
       override: {
         query: {
@@ -24,6 +24,10 @@ export default defineConfig({
         },
         fetch: {
           includeHttpResponseReturnType: false,
+        },
+        mutator: {
+          path: "shared/customFetcher.ts",
+          name: "customFetcher",
         },
       },
     },

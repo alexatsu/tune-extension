@@ -3,13 +3,13 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 
 export interface DtoSearchYtDlpResult {
-  duration?: number;
-  id?: string;
-  thumbnail?: string;
-  title?: string;
-  url?: string;
+  duration: number;
+  id: string;
+  thumbnail: string;
+  title: string;
+  url: string;
 }

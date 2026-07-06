@@ -1,5 +1,4 @@
 import { AddIcon } from "@/assets/icons/AddIcon"
-import { DeleteIcon } from "@/assets/icons/DeleteIcon"
 import { HeartIcon } from "@/assets/icons/HeartIcon"
 import { YoutubeIcon } from "@/assets/icons/YoutubeIcon"
 import { TrackStatusColors } from "@/shared/consts/status"
@@ -7,7 +6,6 @@ import { DtoTrackStatus, SseSseDownloadEvent } from "@/shared/generated/schemas"
 import { getGetApiSseQueryKey } from "@/shared/generated/sse/sse"
 import {
   useGetApiTrackExistYoutube,
-  useDeleteApiTrackSharedId,
   getGetApiTrackExistYoutubeQueryKey,
   usePostApiTrackDownload,
 } from "@/shared/generated/track/track"
@@ -15,14 +13,6 @@ import { queryClient } from "@/shared/lib/queryClient"
 
 export function YoutubeProvider({ url }: { url: string }) {
   const { data, isLoading, error } = useGetApiTrackExistYoutube({ url }, { query: { enabled: !!url } })
-
-  const { mutate: deleteTrack } = useDeleteApiTrackSharedId({
-    mutation: {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey({ url }) })
-      },
-    },
-  })
 
   const { mutate: downloadTrack } = usePostApiTrackDownload({
     mutation: {
@@ -73,20 +63,6 @@ export function YoutubeProvider({ url }: { url: string }) {
               <HeartIcon fill={TrackStatusColors.queued} />
               <button className="px-[2px] flex items-center justify-center rounded">
                 <div className="w-3 h-3 border-2 border-[rgb(255,253,125)] border-t-transparent rounded-full animate-spin" />
-              </button>
-            </div>
-          )}
-
-          {data && data.status === DtoTrackStatus.TrackExist && (
-            <div
-              className={`flex content-center justify-center gap-2 ${data.status === DtoTrackStatus.TrackExist ? "animate-fadeIn" : ""}`}
-            >
-              <HeartIcon fill={TrackStatusColors.exist} />
-              <button
-                className="flex items-center justify-center cursor-pointer  hover:bg-slate-800/80 rounded transition-colors"
-                onClick={() => deleteTrack({ sharedId: data?.sharedId ?? "" })}
-              >
-                <DeleteIcon className="size-4" />
               </button>
             </div>
           )}

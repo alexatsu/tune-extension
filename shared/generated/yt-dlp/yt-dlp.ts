@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Tune Backend API
  * Tune api for local consumers.
- * OpenAPI spec version: 0.3
+ * OpenAPI spec version: 1.0
  */
 import {
   useQuery
@@ -26,7 +26,10 @@ import type {
   GetApiYtDlpSearchParams
 } from '.././schemas';
 
+import { customFetcher } from '../../customFetcher';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -45,25 +48,19 @@ export const getGetApiYtDlpSearchUrl = (params: GetApiYtDlpSearchParams,) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `http://192.168.1.128:8080/api/yt-dlp/search?${stringifiedParams}` : `http://192.168.1.128:8080/api/yt-dlp/search`
+  return stringifiedParams.length > 0 ? `/api/yt-dlp/search?${stringifiedParams}` : `/api/yt-dlp/search`
 }
 
 export const getApiYtDlpSearch = async (params: GetApiYtDlpSearchParams, options?: RequestInit): Promise<DtoSearchResponseDto> => {
   
-  const res = await fetch(getGetApiYtDlpSearchUrl(params),
+  return customFetcher<DtoSearchResponseDto>(getGetApiYtDlpSearchUrl(params),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: DtoSearchResponseDto = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -71,21 +68,21 @@ export const getApiYtDlpSearch = async (params: GetApiYtDlpSearchParams, options
 
 export const getGetApiYtDlpSearchQueryKey = (params?: GetApiYtDlpSearchParams,) => {
     return [
-    `http://192.168.1.128:8080/api/yt-dlp/search`, ...(params ? [params] : [])
+    `/api/yt-dlp/search`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetApiYtDlpSearchQueryOptions = <TData = Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError = DtoErrorResponse>(params: GetApiYtDlpSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiYtDlpSearchQueryOptions = <TData = Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError = DtoErrorResponse>(params: GetApiYtDlpSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiYtDlpSearchQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiYtDlpSearch>>> = ({ signal }) => getApiYtDlpSearch(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiYtDlpSearch>>> = ({ signal }) => getApiYtDlpSearch(params, { signal, ...requestOptions });
 
       
 
@@ -105,7 +102,7 @@ export function useGetApiYtDlpSearch<TData = Awaited<ReturnType<typeof getApiYtD
           TError,
           Awaited<ReturnType<typeof getApiYtDlpSearch>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiYtDlpSearch<TData = Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError = DtoErrorResponse>(
@@ -115,11 +112,11 @@ export function useGetApiYtDlpSearch<TData = Awaited<ReturnType<typeof getApiYtD
           TError,
           Awaited<ReturnType<typeof getApiYtDlpSearch>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiYtDlpSearch<TData = Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError = DtoErrorResponse>(
- params: GetApiYtDlpSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError, TData>>, fetch?: RequestInit}
+ params: GetApiYtDlpSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -127,7 +124,7 @@ export function useGetApiYtDlpSearch<TData = Awaited<ReturnType<typeof getApiYtD
  */
 
 export function useGetApiYtDlpSearch<TData = Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError = DtoErrorResponse>(
- params: GetApiYtDlpSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError, TData>>, fetch?: RequestInit}
+ params: GetApiYtDlpSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiYtDlpSearch>>, TError, TData>>, request?: SecondParameter<typeof customFetcher>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
