@@ -14,7 +14,7 @@ export const customFetcher = async <T>(url: string, options?: RequestInit): Prom
   const normalizedPath = url.startsWith("/") ? url : `/${url}`
   const finalUrl = `${normalizedBaseUrl}${normalizedPath}`
 
-  console.log(finalUrl, "final URL")
+  // console.log(finalUrl, "final URL")
 
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 30000)

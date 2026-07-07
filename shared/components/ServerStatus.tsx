@@ -55,7 +55,6 @@ export function ServerStatus() {
       placeholderData: undefined,
     },
   })
-  console.log(data, "healthy?", backendUrl, error, isError)
 
   useEffect(() => {
     if (backendUrl && !isLoading) {
@@ -63,14 +62,6 @@ export function ServerStatus() {
       refetch()
     }
   }, [backendUrl, isLoading, refetch])
-
-  console.log("ServerStatus state:", {
-    backendUrl,
-    isLoading,
-    queryLoading,
-    dataStatus: data?.status,
-    error,
-  })
 
   return (
     isError && (
