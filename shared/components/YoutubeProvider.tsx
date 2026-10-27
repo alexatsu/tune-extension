@@ -10,12 +10,10 @@ import {
   usePostApiTrackDownload,
 } from "@/shared/generated/track/track"
 import { queryClient } from "@/shared/lib/queryClient"
+import { backendUrlStorage } from "../customFetcher"
 
 export function YoutubeProvider({ url }: { url: string }) {
-  const { data, isLoading, error, refetch } = useGetApiTrackExistYoutube(
-    { url }, 
-    { query: { enabled: !!url } }
-  )
+  const { data, isLoading, error, refetch } = useGetApiTrackExistYoutube({ url }, { query: { enabled: !!url } })
 
   const { mutate: downloadTrack, isPending: isDownloading } = usePostApiTrackDownload({
     mutation: {
@@ -24,26 +22,79 @@ export function YoutubeProvider({ url }: { url: string }) {
       },
     },
   })
+  const [backendUrl, setBackendUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    const eventSource = new EventSource(getGetApiSseQueryKey()[0])
+    let cancelled = false
 
-    const sseDownloadFinished = async () => {
+    backendUrlStorage.getValue().then((value) => {
+      if (!cancelled) {
+        setBackendUrl(value || null)
+      }
+    })
+
+    const unwatch = backendUrlStorage.watch((newValue) => {
+      console.log("[backendUrl] changed:", newValue)
+      setBackendUrl(newValue || null)
+    })
+
+    return () => {
+      cancelled = true
+      unwatch()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!backendUrl) {
+      console.log("[SSE] no backend URL configured, skipping connection")
+      return
+    }
+
+    const [ssePath] = getGetApiSseQueryKey()
+    const normalizedBaseUrl = backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl
+    const normalizedPath = ssePath.startsWith("/") ? ssePath : `/${ssePath}`
+    const sseUrl = `${normalizedBaseUrl}${normalizedPath}`
+    console.log("[SSE] connecting to:", sseUrl)
+
+    const eventSource = new EventSource(sseUrl)
+
+    const sseDownloadFinished = async (e: MessageEvent) => {
+      console.log("[SSE] download_finished received:", e.data)
       try {
         await queryClient.invalidateQueries({ queryKey: getGetApiTrackExistYoutubeQueryKey({ url }) })
-      } catch (e) {
-        console.error("SSE parse error:", e)
+        console.log("[SSE] invalidateQueries done for url:", url)
+      } catch (err) {
+        console.error("[SSE] invalidateQueries error:", err)
       }
     }
 
+    // lifecycle logging
+    eventSource.onopen = () => {
+      console.log("[SSE] connection OPEN, readyState:", eventSource.readyState)
+    }
+
+    eventSource.onerror = (e) => {
+      console.log("[SSE] connection ERROR", {
+        readyState: eventSource.readyState, // 0=CONNECTING, 1=OPEN, 2=CLOSED
+        url: eventSource.url,
+        event: e,
+      })
+    }
+
+    // catch-all so you can confirm ANY frames arrive
+    eventSource.onmessage = (e) => {
+      console.log("[SSE] default message:", e.data)
+    }
+
     eventSource.addEventListener(SseSseDownloadEvent.EventDownloadFinished, sseDownloadFinished)
-    eventSource.onerror = () => console.log("SSE disconnected")
+    console.log("[SSE] listener attached for event:", SseSseDownloadEvent.EventDownloadFinished)
 
     return () => {
+      console.log("[SSE] cleanup, closing connection to:", sseUrl)
       eventSource.removeEventListener(SseSseDownloadEvent.EventDownloadFinished, sseDownloadFinished)
       eventSource.close()
     }
-  }, [url])
+  }, [backendUrl, url])
 
   console.log(data, url, "here")
 
@@ -69,7 +120,7 @@ export function YoutubeProvider({ url }: { url: string }) {
 
         <div className="flex items-center gap-2 flex-wrap">
           <span>track</span>
-          
+
           {/* Error state with retry */}
           {error && (
             <div className="flex content-center justify-center gap-2 animate-fadeIn">
@@ -105,7 +156,7 @@ export function YoutubeProvider({ url }: { url: string }) {
           )}
 
           {/* File missing - re-download needed */}
-          {!isLoading && !error && data && needsRedownload && (
+          {!isLoading && !error && data && needsRedownload && data.status !== DtoTrackStatus.TrackQueued && (
             <div className="flex content-center justify-center gap-2 animate-fadeIn">
               <HeartIcon fill={TrackStatusColors.missing} />
               <button
