@@ -1,0 +1,23 @@
+services:
+  tune-extension-chrome-dev:
+    image: tune-extension-chrome-dev-i
+    container_name: tune-extension-chrome-dev-c
+    build:
+      context: .
+      dockerfile: Dockerfile.chrome.dev
+    volumes:
+      - .:/app
+      - extension_node_modules:/app/node_modules
+
+  tune-extension-firefox-dev:
+    image: tune-extension-firefox-dev-i
+    container_name: tune-extension-firefox-dev-c
+    build:
+      context: .
+      dockerfile: Dockerfile.firefox.dev
+    volumes:
+      - .:/app
+      - extension_node_modules:/app/node_modules
+
+volumes:
+  extension_node_modules:
