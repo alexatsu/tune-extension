@@ -1,9 +1,0 @@
-FROM node:24-bookworm-slim
-
-WORKDIR /app
-RUN corepack enable
-
-COPY . .
-RUN pnpm install --frozen-lockfile
-
-CMD ["pnpm", "dev:firefox"]
