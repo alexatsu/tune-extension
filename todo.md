@@ -1,0 +1,1 @@
+- redo styles after desktop is done, looks ugly
